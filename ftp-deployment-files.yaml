@@ -1,0 +1,41 @@
+
+apiVersion: apps/v1beta1 # for versions before 1.6.0 use extensions/v1beta1
+kind: Deployment
+metadata:
+  name: my-ftp
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: my-ftp
+    spec:
+      volumes:
+        - name: azure-files
+          azureFile:
+            secretName: azure-secret
+            shareName: k8sshare
+            readOnly: false
+      containers:
+      - name: my-ftp-container
+        image: fauria/vsftpd
+        ports:
+        - containerPort: 21
+          protocol: TCP
+          name: "ftp-server"
+        volumeMounts:
+        - mountPath: "/home/vsftpd"
+          name: azure-files
+        env:
+        - name: FTP_USER
+          value: "ftpuser"
+        - name: FTP_PASS
+          value: "P@ssw0rd!"
+      nodeSelector:
+        beta.kubernetes.io/os: linux
+        #- name: PASV_ADDRESS
+        #  value: "127.0.0.1"
+        #- name: PASV_MIN_PORT
+        #  value: "21100"
+        #- name: PASV_MAX_PORT
+        #  value: "21110"
