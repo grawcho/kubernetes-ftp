@@ -26,9 +26,11 @@ spec:
           name: task-pv-storage
         env:
         - name: FTP_USER
-          value: "user"
+          value: "ftpuser"
         - name: FTP_PASS
-          value: "pass1234"
+          value: "P@ssw0rd!"
+      nodeSelector:
+        beta.kubernetes.io/os: linux
         #- name: PASV_ADDRESS
         #  value: "127.0.0.1"
         #- name: PASV_MIN_PORT
